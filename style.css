@@ -1,0 +1,64 @@
+/* Ensure the body takes up the full height of the viewport */
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f0f0; /* Light gray background */
+  background-image: url('images/pawel-czerwinski-RkIsyD_AVvc-unsplash.jpg'); /* Path to your image */
+  background-size: cover; /* Cover the entire form */
+  background-position: center; /* Center the image */
+}
+
+/* Center the form container */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* Center the h2 heading */
+.form-container h2 {
+  text-align: center;
+  margin-bottom: 20px; /* Space between heading and form */
+}
+
+/* Style the form with background color and image */
+form {
+  background-size: cover; /* Cover the entire form */
+  background-position: center; /* Center the image */
+  padding: 20px;
+  border: 2px solid #000000; /* Gray border */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  width: 100%;
+  max-width: 500px; /* Maximum width of the form */
+}
+
+/* Align input pairs side by side */
+.input-pair {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px; /* Space between rows */
+}
+
+/* Style individual input groups */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  width: 48%; /* Width of each input field */
+}
+
+.input-group label {
+  margin-bottom: 5px; /* Space between label and input */
+  font-weight: bold; /* Make label text bold */
+}
+
+.input-group input {
+  padding: 8px;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  font-weight: bold; /* Make input text bold */
+}

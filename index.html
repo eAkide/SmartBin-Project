@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Report Garbage Bin</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    video, canvas {
+      display: block;
+      margin: 10px 0;
+    }
+    canvas {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Report a Full Garbage Bin</h2>
+    <form id="binForm">
+      <div class="input-pair">
+        <div class="input-group">
+          <label for="firstName">First Name:</label>
+          <input type="text" id="firstName" required>
+        </div>
+        <div class="input-group">
+          <label for="lastName">Last Name:</label>
+          <input type="text" id="lastName" required>
+        </div>
+      </div>
+      <div class="input-pair">
+        <div class="input-group">
+          <label for="age">Age:</label>
+          <input type="number" id="age" required>
+        </div>
+        <div class="input-group">
+          <label for="location">Location:</label>
+          <select id="location" required>
+            <option value="">Select a location</option>
+            <option value="Tom Mboya Street">Tom Mboya Street</option>
+            <option value="Moi Avenue">Moi Avenue</option>
+            <option value="Haile Selassie Avenue">Haile Selassie Avenue</option>
+            <option value="Kenyatta Avenue">Kenyatta Avenue</option>
+            <option value="Kimathi Street">Kimathi Street</option>
+            <option value="River Road">River Road</option>
+            <option value="Accra Road">Accra Road</option>
+            <option value="Odeon Stage">Odeon Stage</option>
+            <option value="Koja Stage">Koja Stage</option>
+            <option value="Tea Room Stage">Tea Room Stage</option>
+            <option value="Afyacentre Stage">Afyacentre Stage</option>
+            <option value="Hakati Stage">Hakati Stage</option>
+          </select>
+        </div>
+      </div>
+
+      <label for="notes">Additional Notes:</label>
+      <textarea id="notes"></textarea><br><br>
+
+      <!-- Webcam and Image Capture -->
+      <label for="video">Live Camera Preview:</label><br>
+      <video id="video" width="320" height="240" autoplay></video><br>
+      <button type="button" id="capture">Capture Photo</button><br><br>
+
+      <canvas id="canvas" width="320" height="240"></canvas>
+      <input type="hidden" id="imageData">
+
+      <!-- Submit -->
+      <button type="submit">Submit Report</button>
+    </form>
+  </div>
+
+  <script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const captureButton = document.getElementById('capture');
+    const imageDataInput = document.getElementById('imageData');
+    const form = document.getElementById('binForm');
+
+    // Start the webcam
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        video.srcObject = stream;
+      })
+      .catch(err => {
+        alert("Could not access webcam: " + err);
+      });
+
+    // Capture image
+    captureButton.addEventListener('click', () => {
+      const context = canvas.getContext('2d');
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const imageDataURL = canvas.toDataURL('image/png');
+      imageDataInput.value = imageDataURL;
+      alert('Photo captured successfully!');
+    });
+
+    // Submit form
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      if (!imageDataInput.value) {
+        alert('Please capture a photo before submitting.');
+        return;
+      }
+
+      const payload = {
+        firstName: document.getElementById('firstName').value,
+        lastName: document.getElementById('lastName').value,
+        age: document.getElementById('age').value,
+        location: document.getElementById('location').value,
+        notes: document.getElementById('notes').value,
+        imageData: imageDataInput.value
+      };
+
+      try {
+        const res = await fetch('/submit-report', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await res.json();
+        alert(result.message);
+      } catch (err) {
+        console.error(err);
+        alert('Failed to submit report. Please try again.');
+      }
+    });
+  </script>
+</body>
+</html>
